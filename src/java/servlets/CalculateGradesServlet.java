@@ -4,11 +4,15 @@ package servlets;
 import business.Student;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Field;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+
+// On reflection branch????
 
 /**
  *
@@ -24,8 +28,8 @@ public class CalculateGradesServlet extends HttpServlet
         String URL = "/StudentGrade.jsp";
         String errorMsg = "";
  
+        /*
         Student student = new Student();
-        
         try{
             String sID = request.getParameter("studentID");
             String lName = request.getParameter("lastName");
@@ -42,7 +46,6 @@ public class CalculateGradesServlet extends HttpServlet
         } catch(Exception e) {
             errorMsg += "Exception on ID or Name. <br>";
         }
-        
         
         try {
             String sq1 = request.getParameter("quiz1");
@@ -79,7 +82,7 @@ public class CalculateGradesServlet extends HttpServlet
         if (!errorMsg.isEmpty()){
             URL = "/Students.jsp";
             request.setAttribute("errorMsg", errorMsg);
-        } /*else {
+        }*/ /*else {
             //ServletContext context = getServletContext();
             //String path = context.getRealPath("/WEB-INF/classlist.txt");
 
@@ -89,10 +92,76 @@ public class CalculateGradesServlet extends HttpServlet
             }
         }*/
         
+        // Using reflection to provide value to setters 
+      
+        try {
+            Class<?> studentClass = Class.forName("business.Student");  
+            Object instance = studentClass.newInstance();  
+            setValue(instance, "studentID", request.getParameter("studentID"));
+            setValue(instance, "firstName", request.getParameter("firstName"));
+            setValue(instance, "lastName", request.getParameter("lastName"));
+            setValue(instance, "quiz2", Double.parseDouble(request.getParameter("quiz2")));
+            setValue(instance, "quiz3", Double.parseDouble(request.getParameter("quiz3")));
+            setValue(instance, "quiz4", Double.parseDouble(request.getParameter("quiz4")));
+            setValue(instance, "quiz5", Double.parseDouble(request.getParameter("quiz5")));
+            setValue(instance, "quizMakeUp", Double.parseDouble(request.getParameter("quizMakeUp")));
+            setValue(instance, "midterm", Double.parseDouble(request.getParameter("midtern")));
+            setValue(instance, "probs", Double.parseDouble(request.getParameter("probs")));
+            setValue(instance, "final", Double.parseDouble(request.getParameter("final")));
+        
+            request.setAttribute("student", instance);
+            
+            /*
+            if (!errorMsg.isEmpty()){
+                URL = "/Students.jsp";
+                request.setAttribute("errorMsg", errorMsg);
+            } else {
+                ServletContext context = getServletContext();
+                String path = context.getRealPath("/WEB-INF/classlist.txt");
+
+                if(!StudentIO.addStudent((Student) instance,path)) {
+                    errorMsg += "Unable to save student data.";
+                    request.setAttribute("errorMsg", errorMsg);
+                }
+            }*/
+        } catch(IllegalArgumentException e) {
+            errorMsg += e.getMessage();
+        } catch(Exception e) {
+            errorMsg += e.getMessage();
+        }
+        
+        if (!errorMsg.isEmpty()){
+            URL = "/Students.jsp";
+            request.setAttribute("errorMsg", errorMsg);
+        }
         
         RequestDispatcher disp = getServletContext().getRequestDispatcher(URL);
         disp.forward(request, response);    
     }
+    
+    private static boolean setValue(Object object, String fieldName, Object fieldValue) 
+            throws NoSuchFieldException, IllegalAccessException {
+        
+        Class<?> studentClass = object.getClass();
+        
+        while(studentClass != null){
+            try {
+                Field field = studentClass.getDeclaredField(fieldName);
+                field.setAccessible(true);
+                field.set(object, fieldValue);
+
+                if (field.getName().equalsIgnoreCase(fieldName)) {
+                    throw new IllegalArgumentException(field.getName() + " cannot be empty.");
+                }
+                return true;
+            }catch(NumberFormatException e){
+                throw new NumberFormatException("Wrong format " + e);
+            }
+            
+        } 
+        return false;
+    }
+    
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
