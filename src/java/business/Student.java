@@ -34,6 +34,13 @@ public class Student
         letterGrade = "";
         built = false;
     }
+    
+    public Student(String studentID, String firstName, String lastName, double quiz1) {
+        this.studentID = studentID;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.quiz1 = quiz1;
+    }
 
     public String getStudentID()
     {
