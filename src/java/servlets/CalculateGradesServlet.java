@@ -35,56 +35,195 @@ public class CalculateGradesServlet extends HttpServlet
  
         Student student = new Student();
         
-        try{
+        try {
             String sID = request.getParameter("studentID");
-            String lName = request.getParameter("lastName");
-            String fName = request.getParameter("firstName");
-
-            if(sID.isEmpty() || lName.isEmpty() || fName.isEmpty()) {
-                errorMessage += "Bad or missing ID or name.<br>";
+            if (sID == null || sID.isEmpty()) {
+                errorMessage += "Please enter student ID.<br>";
             }
             else {
                 student.setStudentID(sID);
-                student.setLastName(lName);
+            }
+        } catch(Exception e) {
+            errorMessage += "Invalid entry found in student ID.<br>";
+        }  
+        // First Name
+        try {
+            String fName = request.getParameter("firstName");
+            if (fName == null || fName.isEmpty()) {
+                errorMessage += "Please enter first name.<br>";
+            }
+            else {
                 student.setFirstName(fName);
             }
         } catch(Exception e) {
-            errorMessage += "Exception on ID or Name. <br>";
-        }
-        
+            errorMessage += "Invalid entry found in first name.<br>";
+        }  
+        // Last Name
         try {
-            String sq1 = request.getParameter("quiz1");
-            String quiz2 = request.getParameter("quiz2");
-            if (!sq1.isEmpty()) {
-                double q1 = Double.parseDouble(sq1);
-                if (q1 < 0) {
-                    throw new NumberFormatException("negative q1.");
+            String lName = request.getParameter("lastName");
+            if (lName == null || lName.isEmpty()) {
+                errorMessage += "Please enter last name.<br>";
+            }
+            else {
+                student.setLastName(lName);
+            }
+        } catch(Exception e) {
+            errorMessage += "Invalid entry found in last name.<br>";
+        }  
+        // Quiz 1
+        try {
+            String q1 = request.getParameter("quiz1");
+            if (!q1.isEmpty()) {
+                double score = Double.parseDouble(q1);
+                if (score < 0) {
+                    throw new NumberFormatException("Negative value.");
                 }
                 else {
-                    student.setQuiz1(q1);
+                    student.setQuiz1(score);
                 }
             } else {
-                errorMessage += "Q1 is empty. <br>";
+                errorMessage += "Quiz 1 is required. <br>";
+            }
+        } catch (NumberFormatException e) {
+            errorMessage += "Quiz value is invalid: " + e.getMessage() + "<br>";
+        }
+        // Quiz 2
+        try {
+            String q2 = request.getParameter("quiz2");
+            if (!q2.isEmpty()) {
+                Double score = Double.parseDouble(q2);
+                if (score < 0) {
+                    throw new NumberFormatException("Negative value.");
+                }
+                else {
+                    student.setQuiz2(score);
+                }
+            } else {
+                errorMessage += "Quiz 2 is required. <br>";
+            }
+        } catch (NumberFormatException e) {
+            errorMessage += "Quiz 2 is invalid: " + e.getMessage() + "<br>";
+        }
+        // Quiz 3
+        try {
+            String q3 = request.getParameter("quiz3");
+            if (!q3.isEmpty()) {
+                Double score = Double.parseDouble(q3);
+                if (score < 0) {
+                    throw new NumberFormatException("Negative value.");
+                }
+                else {
+                    student.setQuiz3(score);
+                }
+            } else {
+                errorMessage += "Quiz 3 is required. <br>";
             }
             
         } catch (NumberFormatException e) {
-            errorMessage += "Q1 value is bad/invalid: " + e.getMessage() + "<br>";
+            errorMessage += "Quiz 3 is invalid: " + e.getMessage() + "<br>";
+        }
+        // Quiz 4
+        try {
+            String q4 = request.getParameter("quiz4");
+            if (!q4.isEmpty()) {
+                Double score = Double.parseDouble(q4);
+                if (score < 0) {
+                    throw new NumberFormatException("Negative value.");
+                }
+                else {
+                    student.setQuiz4(score);
+                }
+            } else {
+                errorMessage += "Quiz 4 is required. <br>";
+            }
+            
+        } catch (NumberFormatException e) {
+            errorMessage += "Quiz 4 is invalid: " + e.getMessage() + "<br>";
+        }
+        // Quiz 5
+        try {
+            String q5 = request.getParameter("quiz5");
+            if (!q5.isEmpty()) {
+                Double score = Double.parseDouble(q5);
+                if (score < 0) {
+                    throw new NumberFormatException("Negative value.");
+                }
+                else {
+                    student.setQuiz3(score);
+                }
+            } else {
+                errorMessage += "Quiz 5 is required. <br>";
+            }
+            
+        } catch (NumberFormatException e) {
+            errorMessage += "Quiz 5 is invalid: " + e.getMessage() + "<br>";
+        }
+        // Makeup quiz / may or may not have a value
+        try {
+            String mkup = request.getParameter("quizMakeUp");
+            if (!mkup.isEmpty()) {
+                Double score = Double.parseDouble(mkup);
+                if (score < 0) {
+                    throw new NumberFormatException("Negative value.");
+                }
+                else {
+                    student.setQuizMakeUp(score);
+                }
+            } 
+        } catch (NumberFormatException e) {
+            errorMessage += "Quiz 3 is invalid: " + e.getMessage() + "<br>";
+        }
+        // Midterm
+        try {
+            String mdterm = request.getParameter("midterm");
+            if (!mdterm.isEmpty()) {
+                Double score = Double.parseDouble(mdterm);
+                if (score < 0) {
+                    throw new NumberFormatException("Negative value.");
+                }
+                else {
+                    student.setMidTerm(score);
+                }
+            } else {
+                errorMessage += "Midterm is required. <br>";
+            }
+        } catch (NumberFormatException e) {
+            errorMessage += "Midterm is invalid: " + e.getMessage() + "<br>";
+        }
+        // Problem scores
+        try {
+            String ps = request.getParameter("probs");
+            if (!ps.isEmpty()) {
+                Double score = Double.parseDouble(ps);
+                if (score < 0) {
+                    throw new NumberFormatException("Negative value.");
+                }
+                else {
+                    student.setProbs(score);
+                }
+            } else {
+                errorMessage += "Problem score is required. <br>";
+            }
+            
+        } catch (NumberFormatException e) {
+            errorMessage += "Problem score is invalid: " + e.getMessage() + "<br>";
+        }
+        // Final
+        try {
+            String fin = request.getParameter("final");
+            if (!fin.isEmpty()) {
+                Double score = Double.parseDouble(fin);
+                if (score < 0) {
+                    throw new NumberFormatException("Negative value.");
+                }
+                else {
+                    student.setFinalExam(score);
+                }
+            } 
+        } catch (NumberFormatException e) {
+            errorMessage += "Final score is invalid: " + e.getMessage() + "<br>";
         }
         
-        // for data pull, revise in final program
-        try {
-            student.setQuiz2(Double.parseDouble(request.getParameter("quiz2")));
-            student.setQuiz3(Double.parseDouble(request.getParameter("quiz3")));
-            student.setQuiz4(Double.parseDouble(request.getParameter("quiz4")));
-            student.setQuiz5(Double.parseDouble(request.getParameter("quiz5")));
-            student.setQuizMakeUp(Double.parseDouble(request.getParameter("quizMakeUp"))); // may have no entry
-            student.setMidTerm(Double.parseDouble(request.getParameter("midterm")));
-            student.setProbs(Double.parseDouble(request.getParameter("probs")));
-            student.setFinalExam(Double.parseDouble(request.getParameter("final"))); // may have no entry, students may be excused to take final exam
-        } catch(Exception e){
-            errorMessage += "Error in fields quizMakeup to final";
-        }
-
         // recover values if validation error occurred
         request.setAttribute("student", student);
         
