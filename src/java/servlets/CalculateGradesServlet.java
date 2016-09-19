@@ -2,17 +2,16 @@
 package servlets;
 
 import business.Student;
+import business.StudentIO;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-
-// On reflection branch????
 
 /**
  *
@@ -20,23 +19,29 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class CalculateGradesServlet extends HttpServlet
 {
+    
+    ArrayList<String> fieldError;
+    String[] fields = {"studentID", "firstName", "lastName", "quiz1", "quiz2",
+        "quiz3", "quiz4", "quiz5", "quizMakeUp", "midterm", "probs", "final"};
+    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
     {
         response.setContentType("text/html;charset=UTF-8");
 
+        fieldError = new ArrayList<>();
         String URL = "/StudentGrade.jsp";
-        String errorMsg = "";
+        String errorMessage = "";
  
-        /*
         Student student = new Student();
+        
         try{
             String sID = request.getParameter("studentID");
             String lName = request.getParameter("lastName");
             String fName = request.getParameter("firstName");
 
             if(sID.isEmpty() || lName.isEmpty() || fName.isEmpty()) {
-                errorMsg += "Bad or missing ID or name.<br>";
+                errorMessage += "Bad or missing ID or name.<br>";
             }
             else {
                 student.setStudentID(sID);
@@ -44,11 +49,12 @@ public class CalculateGradesServlet extends HttpServlet
                 student.setFirstName(fName);
             }
         } catch(Exception e) {
-            errorMsg += "Exception on ID or Name. <br>";
+            errorMessage += "Exception on ID or Name. <br>";
         }
         
         try {
             String sq1 = request.getParameter("quiz1");
+            String quiz2 = request.getParameter("quiz2");
             if (!sq1.isEmpty()) {
                 double q1 = Double.parseDouble(sq1);
                 if (q1 < 0) {
@@ -58,11 +64,11 @@ public class CalculateGradesServlet extends HttpServlet
                     student.setQuiz1(q1);
                 }
             } else {
-                errorMsg += "Q1 is empty. <br>";
+                errorMessage += "Q1 is empty. <br>";
             }
             
         } catch (NumberFormatException e) {
-            errorMsg += "Q1 value is bad/invalid: " + e.getMessage() + "<br>";
+            errorMessage += "Q1 value is bad/invalid: " + e.getMessage() + "<br>";
         }
         
         // for data pull, revise in final program
@@ -76,90 +82,142 @@ public class CalculateGradesServlet extends HttpServlet
             student.setProbs(Double.parseDouble(request.getParameter("probs")));
             student.setFinalExam(Double.parseDouble(request.getParameter("final"))); // may have no entry, students may be excused to take final exam
         } catch(Exception e){
-            errorMsg += "Error in fields quizMakeup to final";
+            errorMessage += "Error in fields quizMakeup to final";
         }
-        
-        if (!errorMsg.isEmpty()){
-            URL = "/Students.jsp";
-            request.setAttribute("errorMsg", errorMsg);
-        }*/ /*else {
-            //ServletContext context = getServletContext();
-            //String path = context.getRealPath("/WEB-INF/classlist.txt");
 
-            if(!StudentIO.addStudent((Student)student,path)) {  //Cast is required
-                errorMsg += "Unable to save student data.";
-                request.setAttribute("errorMsg", errorMsg);
+        // recover values if validation error occurred
+        request.setAttribute("student", student);
+        
+        if (!errorMessage.isEmpty()){
+            URL = "/Students.jsp";
+            request.setAttribute("errorMessage", errorMessage);
+        }else {
+            ServletContext context = getServletContext();
+            String path = context.getRealPath("/WEB-INF/classlist.txt");
+
+            if(!StudentIO.addStudent(student,path)) {
+                errorMessage += "Unable to save student data.";
+                request.setAttribute("errorMessage", errorMessage);
             }
-        }*/
-        
-        // Using reflection to provide value to setters 
-      
-        try {
-            Class<?> studentClass = Class.forName("business.Student");  
-            Object instance = studentClass.newInstance();  
-            setValue(instance, "studentID", request.getParameter("studentID"));
-            setValue(instance, "firstName", request.getParameter("firstName"));
-            setValue(instance, "lastName", request.getParameter("lastName"));
-            setValue(instance, "quiz2", Double.parseDouble(request.getParameter("quiz2")));
-            setValue(instance, "quiz3", Double.parseDouble(request.getParameter("quiz3")));
-            setValue(instance, "quiz4", Double.parseDouble(request.getParameter("quiz4")));
-            setValue(instance, "quiz5", Double.parseDouble(request.getParameter("quiz5")));
-            setValue(instance, "quizMakeUp", Double.parseDouble(request.getParameter("quizMakeUp")));
-            setValue(instance, "midterm", Double.parseDouble(request.getParameter("midtern")));
-            setValue(instance, "probs", Double.parseDouble(request.getParameter("probs")));
-            setValue(instance, "final", Double.parseDouble(request.getParameter("final")));
-        
-            request.setAttribute("student", instance);
-            
-            /*
-            if (!errorMsg.isEmpty()){
-                URL = "/Students.jsp";
-                request.setAttribute("errorMsg", errorMsg);
-            } else {
-                ServletContext context = getServletContext();
-                String path = context.getRealPath("/WEB-INF/classlist.txt");
-
-                if(!StudentIO.addStudent((Student) instance,path)) {
-                    errorMsg += "Unable to save student data.";
-                    request.setAttribute("errorMsg", errorMsg);
-                }
-            }*/
-        } catch(IllegalArgumentException e) {
-            errorMsg += e.getMessage();
-        } catch(Exception e) {
-            errorMsg += e.getMessage();
-        }
-        
-        if (!errorMsg.isEmpty()){
-            URL = "/Students.jsp";
-            request.setAttribute("errorMsg", errorMsg);
-        }
+        } 
         
         RequestDispatcher disp = getServletContext().getRequestDispatcher(URL);
         disp.forward(request, response);    
     }
     
-    private static boolean setValue(Object object, String fieldName, Object fieldValue) 
+    private void validateInput(HttpServletRequest request, String input)
+    {
+        if (request != null) {
+            // This has to go on a loop instead
+            if (request.getParameter("studentID").trim().isEmpty()) {
+                fieldError.add("Student ID is required.");
+            }
+            if (request.getParameter("firstName").trim().isEmpty()) {
+                fieldError.add("First Name is required.");
+            }
+            if (request.getParameter("lastName").trim().isEmpty()) {
+                fieldError.add("Last Name is required.");
+            }
+            if (request.getParameter("quiz1").trim().isEmpty()) {
+                fieldError.add("Quiz 1 is required.");
+            }
+            if (request.getParameter("quiz2").trim().isEmpty()) {
+                fieldError.add("Quiz 2 is required.");
+            }
+            if (request.getParameter("quiz3").trim().isEmpty()) {
+                fieldError.add("Quiz 3 is required.");
+            }
+            if (request.getParameter("quiz4").trim().isEmpty()) {
+                fieldError.add("Quiz 4 is required.");
+            }
+            if (request.getParameter("quiz5").trim().isEmpty()) {
+                fieldError.add("Quiz 5 is required.");
+            }
+            // Makeup quiz is optional
+            if (!(request.getParameter("quizMakeUp").isEmpty()) &&
+                    (Double.parseDouble(request.getParameter("quizMakeUp")) < 0)) {
+                fieldError.add("Invalid entry. Makeup quiz cannot be less than zero.");
+            }
+            if (!(request.getParameter("midterm").isEmpty()) &&
+                    (Double.parseDouble(request.getParameter("midterm")) < 0)) {
+                fieldError.add("Invalid entry. Midterm score cannot be less than zero.");
+            }
+            if (!(request.getParameter("probs").isEmpty()) &&
+                    (Double.parseDouble(request.getParameter("probs")) < 0)) {
+                fieldError.add("Invalid entry. Problem score cannot be less than zero.");
+            }
+            // Final is Optional
+            if (!(request.getParameter("final").isEmpty()) &&
+                    (Double.parseDouble(request.getParameter("final")) < 0)) {
+                fieldError.add("Invalid entry. Final score cannot be less than zero.");
+            }
+            //return false;
+        }
+        //return true;
+    }
+    
+    private boolean hasNoValidationError(HttpServletRequest request)
+    {
+        if (request != null) {
+            if (request.getParameter("studentID").trim().isEmpty()) {
+                fieldError.add("Student ID is required.");
+            }
+            if (request.getParameter("firstName").trim().isEmpty()) {
+                fieldError.add("First Name is required.");
+            }
+            if (request.getParameter("lastName").trim().isEmpty()) {
+                fieldError.add("Last Name is required.");
+            }
+            if (request.getParameter("quiz1").trim().isEmpty()) {
+                fieldError.add("Quiz 1 is required.");
+            }
+            if (request.getParameter("quiz2").trim().isEmpty()) {
+                fieldError.add("Quiz 2 is required.");
+            }
+            if (request.getParameter("quiz3").trim().isEmpty()) {
+                fieldError.add("Quiz 3 is required.");
+            }
+            if (request.getParameter("quiz4").trim().isEmpty()) {
+                fieldError.add("Quiz 4 is required.");
+            }
+            if (request.getParameter("quiz5").trim().isEmpty()) {
+                fieldError.add("Quiz 5 is required.");
+            }
+            // Makeup quiz is optional
+            if (!(request.getParameter("quizMakeUp").isEmpty()) &&
+                    (Double.parseDouble(request.getParameter("quizMakeUp")) < 0)) {
+                fieldError.add("Invalid entry. Makeup quiz cannot be less than zero.");
+            }
+            if (!(request.getParameter("midterm").isEmpty()) &&
+                    (Double.parseDouble(request.getParameter("midterm")) < 0)) {
+                fieldError.add("Invalid entry. Midterm score cannot be less than zero.");
+            }
+            if (!(request.getParameter("probs").isEmpty()) &&
+                    (Double.parseDouble(request.getParameter("probs")) < 0)) {
+                fieldError.add("Invalid entry. Problem score cannot be less than zero.");
+            }
+            // Final is Optional
+            if (!(request.getParameter("final").isEmpty()) &&
+                    (Double.parseDouble(request.getParameter("final")) < 0)) {
+                fieldError.add("Invalid entry. Final score cannot be less than zero.");
+            }
+            return false;
+        }
+        return true;
+    }
+    
+    // changed boolean to void
+    private static void setValue(Object object, String fieldName, Object fieldValue) 
             throws NoSuchFieldException, IllegalAccessException {
         
         Class<?> studentClass = object.getClass();
-        
         while(studentClass != null){
-            try {
-                Field field = studentClass.getDeclaredField(fieldName);
-                field.setAccessible(true);
-                field.set(object, fieldValue);
-
-                if (field.getName().equalsIgnoreCase(fieldName)) {
-                    throw new IllegalArgumentException(field.getName() + " cannot be empty.");
-                }
-                return true;
-            }catch(NumberFormatException e){
-                throw new NumberFormatException("Wrong format " + e);
-            }
-            
+            Field field = studentClass.getDeclaredField(fieldName);
+            field.setAccessible(true);
+            field.set(object, fieldValue);
+            //return true;
         } 
-        return false;
+        //return false;
     }
     
 
