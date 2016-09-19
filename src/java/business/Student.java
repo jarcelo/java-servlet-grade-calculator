@@ -31,15 +31,29 @@ public class Student
         finalExam = 0;
         quizAvg = 0;
         courseAvg = 0;
-        letterGrade = "";
+        letterGrade = "N/A";
         built = false;
+        
     }
     
-    public Student(String studentID, String firstName, String lastName, double quiz1) {
+    public Student(String studentID, String firstName, String lastName, double quiz1, double quiz2, double quiz3, double quiz4,
+            double quiz5, double quizMakeUp, double midTerm, double probs, double finalExam, double quizAvg, double courseAvg,
+            String letterGrade) {
         this.studentID = studentID;
         this.firstName = firstName;
         this.lastName = lastName;
         this.quiz1 = quiz1;
+        this.quiz2 = quiz2;
+        this.quiz3 = quiz3;
+        this.quiz4 = quiz4;
+        this.quiz5 = quiz5;
+        this.quizMakeUp = quizMakeUp;
+        this.midTerm = midTerm;
+        this.probs = probs;
+        this.finalExam = finalExam;
+        this.quizAvg = quizAvg;
+        this.courseAvg = courseAvg;
+        this.letterGrade = letterGrade;
     }
 
     public String getStudentID()
@@ -193,7 +207,6 @@ public class Student
     {
         try {
             double[] quizScore = {quiz1, quiz2, quiz3, quiz4, quiz5, quizMakeUp};
-            // Sort array ascending order
             Arrays.sort(quizScore);
             quizAvg = (quizScore[2] + quizScore[3] + quizScore[4] + quizScore[5]) / 4.0;
 
@@ -218,7 +231,6 @@ public class Student
                 else {
                     letterGrade = "F";
                 }
-
             }
             built = true;
         } catch(Exception e) {
@@ -228,6 +240,7 @@ public class Student
     
     @Override
     public String toString(){
+        calcStudent();
         String s = studentID + "," + lastName + "," + firstName + "," +
                     quiz1 + "," + quiz2 + "," + quiz3 + "," + quiz4 + "," +
                     quiz5 + "," + quizMakeUp + "," + midTerm + "," + 
