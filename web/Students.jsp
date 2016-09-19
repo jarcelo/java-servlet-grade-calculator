@@ -34,12 +34,18 @@
             <td>Make-Up:</td>
         </tr>
         <tr>
-            <td><input name="quiz1" id="quiz1" type="text" size="10" style="background-color:#FAFAD2"></td>
-            <td><input name="quiz2" id="quiz2" type="text" size="10" style="background-color:#FAFAD2"></td>
-            <td><input name="quiz3" id="quiz3" type="text" size="10" style="background-color:#FAFAD2"></td>
-            <td><input name="quiz4" id="quiz4" type="text" size="10" style="background-color:#FAFAD2"></td>
-            <td><input name="quiz5" id="quiz5" type="text" size="10" style="background-color:#FAFAD2"></td>
-            <td><input name="quizMakeUp" id="quizMakeUp" type="text" size="10" style="background-color:#FAFAD2"></td>
+            <td><input name="quiz1" id="quiz1" type="text" size="10" style="background-color:#FAFAD2"
+                       value="${student.quiz1}" ></td>
+            <td><input name="quiz2" id="quiz2" type="text" size="10" style="background-color:#FAFAD2"
+                       value="${student.quiz2}"></td>
+            <td><input name="quiz3" id="quiz3" type="text" size="10" style="background-color:#FAFAD2"
+                       value="${student.quiz3}"></td>
+            <td><input name="quiz4" id="quiz4" type="text" size="10" style="background-color:#FAFAD2"
+                       value="${student.quiz4}"></td>
+            <td><input name="quiz5" id="quiz5" type="text" size="10" style="background-color:#FAFAD2"
+                       value="${student.quiz5}"></td>
+            <td><input name="quizMakeUp" id="quizMakeUp" type="text" size="10" style="background-color:#FAFAD2"
+                       value="${student.quizMakeUp}"></td>
         </tr>
         </table><br/>
         <table width="400px" border="0" cellspacing="1" >
@@ -49,9 +55,12 @@
             <td>Final:</td>
         </tr>
         <tr>
-            <td><input name="midterm" id="midterm" type="text" size="10" style="background-color:#FAFAD2"></td>
-            <td><input name="probs" id="probs" type="text" size="10" style="background-color:#FAFAD2"></td>
-            <td><input name="final" id="final" type="text" size="10" style="background-color:#FAFAD2"></td>
+            <td><input name="midterm" id="midterm" type="text" size="10" style="background-color:#FAFAD2"
+                       value="${student.midTerm}"></td>
+            <td><input name="probs" id="probs" type="text" size="10" style="background-color:#FAFAD2"
+                       value="${student.probs}"></td>
+            <td><input name="final" id="final" type="text" size="10" style="background-color:#FAFAD2"
+                       value="${student.finalExam}"></td>
         </tr>
         </table><br/>
         <input type="submit" value="Calculate Grade" style="float:left">
@@ -66,8 +75,9 @@
         </table>
                 
         <br>
-        
-        ${errorMsg}
-        
+        <div>
+            <p>Input validation error messages:</p>
+            ${errorMessage}
+        </div>
     </body>
 </html>
