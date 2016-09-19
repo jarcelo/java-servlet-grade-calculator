@@ -45,7 +45,7 @@
             <td><input name="quiz5" id="quiz5" type="text" size="10" style="background-color:#FAFAD2"
                        value="${student.quiz5}"></td>
             <td><input name="quizMakeUp" id="quizMakeUp" type="text" size="10" style="background-color:#FAFAD2"
-                       value="${student.quizMakeUp}"></td>
+                       value="${student.quizMakeUp > 0.0? student.quizMakeUp : "" }"></td>
         </tr>
         </table><br/>
         <table width="400px" border="0" cellspacing="1" >
@@ -60,7 +60,7 @@
             <td><input name="probs" id="probs" type="text" size="10" style="background-color:#FAFAD2"
                        value="${student.probs}"></td>
             <td><input name="final" id="final" type="text" size="10" style="background-color:#FAFAD2"
-                       value="${student.finalExam}"></td>
+                       value="${student.finalExam > 0.0? student.finalExam : ""}"></td>
         </tr>
         </table><br/>
         <input type="submit" value="Calculate Grade" style="float:left">
