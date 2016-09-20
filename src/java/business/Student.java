@@ -180,7 +180,6 @@ public class Student
     {
         if (!built) {
             calcStudent();
-            //built = true;
         }
         return quizAvg;
     }
@@ -189,7 +188,6 @@ public class Student
     {
         if (!built) {
             calcStudent();
-            //built = true;
         }
         return courseAvg;
     }
@@ -198,7 +196,6 @@ public class Student
     {
         if (!built) {
             calcStudent();
-            //built = true;
         }
         return letterGrade;
     }

@@ -1,11 +1,9 @@
 
 package servlets;
 
+import business.Student;
 import business.StudentIO;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.file.InvalidPathException;
 import java.util.ArrayList;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -28,7 +26,7 @@ public class ClassListServlet extends HttpServlet
         String URL = "/ClassList.jsp";
         String path, errorMessage = "";
         
-        ArrayList<String> studentList;
+        ArrayList<Student> studentList;
         try {
             path = getServletContext().getRealPath("WEB-INF/classlist.txt");
             studentList = StudentIO.getStudentList(path);

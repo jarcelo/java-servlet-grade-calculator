@@ -19,11 +19,10 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class CalculateGradesServlet extends HttpServlet
 {
-    
     ArrayList<String> fieldError;
     String[] fields = {"studentID", "firstName", "lastName", "quiz1", "quiz2",
         "quiz3", "quiz4", "quiz5", "quizMakeUp", "midterm", "probs", "final"};
-    
+        
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
     {
@@ -120,7 +119,7 @@ public class CalculateGradesServlet extends HttpServlet
             }
             
         } catch (NumberFormatException e) {
-            errorMessage += "Quiz 3 is invalid: " + e.getMessage() + "<br>";
+            errorMessage += "Quiz 3 is invalid: " + e.getMessage() + ".<br>";
         }
         // Quiz 4
         try {
@@ -138,7 +137,7 @@ public class CalculateGradesServlet extends HttpServlet
             }
             
         } catch (NumberFormatException e) {
-            errorMessage += "Quiz 4 is invalid: " + e.getMessage() + "<br>";
+            errorMessage += "Quiz 4 is invalid: " + e.getMessage() + ".<br>";
         }
         // Quiz 5
         try {
@@ -149,14 +148,14 @@ public class CalculateGradesServlet extends HttpServlet
                     throw new NumberFormatException("Negative value.");
                 }
                 else {
-                    student.setQuiz3(score);
+                    student.setQuiz5(score);
                 }
             } else {
                 errorMessage += "Quiz 5 is required. <br>";
             }
             
         } catch (NumberFormatException e) {
-            errorMessage += "Quiz 5 is invalid: " + e.getMessage() + "<br>";
+            errorMessage += "Quiz 5 is invalid: " + e.getMessage() + ".<br>";
         }
         // Makeup quiz / may or may not have a value
         try {
@@ -171,7 +170,7 @@ public class CalculateGradesServlet extends HttpServlet
                 }
             } 
         } catch (NumberFormatException e) {
-            errorMessage += "Makeup quiz is invalid: " + e.getMessage() + "<br>";
+            errorMessage += "Makeup quiz is invalid: " + e.getMessage() + ".<br>";
         }
         // Midterm
         try {
@@ -188,7 +187,7 @@ public class CalculateGradesServlet extends HttpServlet
                 errorMessage += "Midterm is required. <br>";
             }
         } catch (NumberFormatException e) {
-            errorMessage += "Midterm is invalid: " + e.getMessage() + "<br>";
+            errorMessage += "Midterm is invalid: " + e.getMessage() + ".<br>";
         }
         // Problem scores
         try {
@@ -206,7 +205,7 @@ public class CalculateGradesServlet extends HttpServlet
             }
             
         } catch (NumberFormatException e) {
-            errorMessage += "Problem score is invalid: " + e.getMessage() + "<br>";
+            errorMessage += "Problem score is invalid: " + e.getMessage() + ".<br>";
         }
         // Final
         try {
@@ -221,7 +220,7 @@ public class CalculateGradesServlet extends HttpServlet
                 }
             } 
         } catch (NumberFormatException e) {
-            errorMessage += "Final score is invalid: " + e.getMessage() + "<br>";
+            errorMessage += "Final score is invalid: " + e.getMessage() + ".<br>";
         }
         
         // recover values if validation error occurred
@@ -243,6 +242,7 @@ public class CalculateGradesServlet extends HttpServlet
         disp.forward(request, response);    
     }
     
+    // <editor-fold defaultstate="collapsed" desc="Unused methods (will be utilized when value is set using reflection). Click on the + sign to expand.">
     private void validateInput(HttpServletRequest request, String input)
     {
         if (request != null) {
@@ -357,7 +357,7 @@ public class CalculateGradesServlet extends HttpServlet
         } 
         //return false;
     }
-    
+    // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

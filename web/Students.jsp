@@ -72,25 +72,26 @@
                                    value="${student.finalExam > 0.0? student.finalExam : ""}"></td>
                     </tr>
                 </table><br/>
-                <input class="form-control text-center" type="submit" value="Calculate Grade">
+                <hr>
+                <input class="text-center btn btn-default" type="submit" 
+                       value="&nbsp;&nbsp;&nbsp;Calculate Grade&nbsp;&nbsp;&nbsp;">
         </form>
-        
-                    <div class="row">
-                        <div class="col-sm-6 col-sm-offset-3">
-                            <table width="600px" border="0" cellspacing="1" cellpadding="2">
-                                <form action="ClassList" method="post" name="Classlist">
-                                    <hr>
-                                    <tr><td><input class="form-control" type="submit" value="View Class List"></td></tr>
-                                </form>
-                            </table>
-                        </div>
-                    </div>  
+  
+                <table width="130px" border="0" cellspacing="1" cellpadding="2">
+                    <form action="ClassList" method="post" name="Classlist">
+                        <br>
+                        <tr><td><input class="form-control btn btn-default" type="submit" 
+                                       value="&nbsp;&nbsp;&nbsp;&nbsp;View Class List&nbsp;&nbsp;&nbsp;"></td></tr>
+                    </form>
+                </table>
+           
                 
-        <br>
+            <br>
         
-        <div>
-            ${errorMessage}
-        </div>
+            <div>
+                <hr>
+                ${errorMessage}
+            </div>
         </div>
     </body>
 </html>
