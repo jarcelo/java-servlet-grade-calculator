@@ -171,7 +171,7 @@ public class CalculateGradesServlet extends HttpServlet
                 }
             } 
         } catch (NumberFormatException e) {
-            errorMessage += "Quiz 3 is invalid: " + e.getMessage() + "<br>";
+            errorMessage += "Makeup quiz is invalid: " + e.getMessage() + "<br>";
         }
         // Midterm
         try {
@@ -239,7 +239,6 @@ public class CalculateGradesServlet extends HttpServlet
                 request.setAttribute("errorMessage", errorMessage);
             }
         } 
-        
         RequestDispatcher disp = getServletContext().getRequestDispatcher(URL);
         disp.forward(request, response);    
     }
