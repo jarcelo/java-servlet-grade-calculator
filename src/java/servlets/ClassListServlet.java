@@ -28,7 +28,7 @@ public class ClassListServlet extends HttpServlet
         
         ArrayList<Student> studentList;
         try {
-            path = getServletContext().getRealPath("WEB-INF/classlist.txt");
+            path = getServletContext().getRealPath("/WEB-INF/classlist.txt");
             studentList = StudentIO.getStudentList(path);
             request.setAttribute("studentList", studentList);
         } catch(IOException e) {
