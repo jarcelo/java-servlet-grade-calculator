@@ -46,7 +46,7 @@
                         <br>
                         <br>
                         <br>
-                        <div>
+                        <div class="text-danger">
                             <p>
                                 <br>
                                 ${errorMessage}
